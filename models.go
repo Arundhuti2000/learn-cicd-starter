@@ -14,7 +14,7 @@ type User struct {
 	ApiKey    string    `json:"api_key"`
 }
 
-func databaseUserToUser(user database.User) (User, error)  {
+func databaseUserToUser(user database.User) (User, error) {
 	createdAt, err := time.Parse(time.RFC3339, user.CreatedAt)
 	if err != nil {
 		return User{}, err
