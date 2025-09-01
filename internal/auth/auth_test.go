@@ -4,14 +4,22 @@ import (
 	"net/http"
 	"testing"
 )
-func TestGetAPIKey(h *testing.T){
+
+func TestGetAPIKey_NoHeader(t *testing.T) {
 	headers := http.Header{}
-	_,err := GetAPIKey(headers)
+	_, err := GetAPIKey(headers)
 	if err != ErrNoAuthHeaderIncluded {
-		h.Fatalf("expected: %v, got: %v", ErrNoAuthHeaderIncluded, err)
+		t.Fatalf("expected: %v, got: %v", ErrNoAuthHeaderIncluded, err)
 	}
+}
+
+func TestGetAPIKey_MalformedHeader(t *testing.T) {
+	headers := http.Header{}
+	headers.Set("Authorization", "Bearer sometoken")
+
+	_, err := GetAPIKey(headers)
 	if err == nil || err.Error() != "malformed authorization header" {
-		h.Fatalf("expected: malformed authorization header, got: %v", err)
+		t.Fatalf("expected: malformed authorization header, got: %v", err)
 	}
 }
 func TestGetAPIKey_ValidHeader(t *testing.T) {
